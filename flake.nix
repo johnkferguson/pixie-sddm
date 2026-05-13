@@ -75,7 +75,10 @@
               ];
             };
 
-            nativeBuildInputs = [ pkgs.kdePackages.qtdeclarative ];
+            nativeBuildInputs = [
+              pkgs.kdePackages.qtdeclarative
+              (pkgs.python3.withPackages (p: [ p.pillow ]))
+            ];
             dontWrapQtApps = true;
 
             # Pre-build QML cache siblings (.qmlc next to each .qml). Without this,
@@ -107,7 +110,18 @@
                 fi
               }
 
+              # Pre-compute accent from the wallpaper unless the user supplied one.
+              # Skipping runtime extraction (autoColor=false) makes the greeter render
+              # the correct accent from the very first frame.
+              ${lib.optionalString (accentColor == null) ''
+                bg="${if background != null then "${background}" else "assets/background.jpg"}"
+                accent=$(python3 ${./extract-accent.py} "$bg")
+                update_ini "accentColor" "$accent"
+                update_ini "autoColor" "false"
+              ''}
+
               # Dynamically generate update_ini calls for all configuration arguments
+              # (these run AFTER pre-compute, so user overrides win)
               ${lib.concatStringsSep "\n" (
                 lib.mapAttrsToList (k: v: ''update_ini "${k}" "${toIniValue v}"'') cfgArgs
               )}

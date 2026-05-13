@@ -30,7 +30,7 @@ Rectangle {
 
     Timer {
         id: uiReadyTimer
-        interval: 500
+        interval: 400
         repeat: false
         onTriggered: container.uiReady = true
     }

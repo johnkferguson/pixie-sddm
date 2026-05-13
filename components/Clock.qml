@@ -8,8 +8,8 @@ Item {
     id: clock
 
     property string backgroundSource: ""
-    property color defaultHoursColor: "#FF5722"
-    property color defaultMinutesColor: "#FFAB91"
+    property color defaultHoursColor: "#AED68A"
+    property color defaultMinutesColor: "#D4E4BC"
     property string fontFamily: "FlexRounded" // Overridden by Main.qml
     property color baseAccent: config.accentColor
     property color smartHoursColor: defaultHoursColor
