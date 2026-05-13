@@ -58,6 +58,7 @@ Row {
                 color: config.textColor
                 font.family: powerBarRoot.fontFamily
                 font.pixelSize: 13
+                font.weight: Font.Medium
             }
         }
     }
