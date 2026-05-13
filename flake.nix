@@ -69,6 +69,24 @@
               ];
             };
 
+            nativeBuildInputs = [ pkgs.kdePackages.qtdeclarative ];
+            dontWrapQtApps = true;
+
+            # Pre-build QML cache siblings (.qmlc next to each .qml). Without this,
+            # SDDM's runtime cache stays stale across theme updates because Nix sets
+            # all store-path mtimes to epoch 0, defeating Qt's mtime-based cache
+            # invalidation. The runtime checks for a sibling .qmlc first, and
+            # qmlcachegen writes sourceTimeStamp=0 in the header so Qt skips the
+            # timestamp check entirely.
+            postBuild = ''
+              qmlcg=${pkgs.kdePackages.qtdeclarative}/libexec/qmlcachegen
+              qmlpath=${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml
+
+              for qml in Main.qml components/*.qml; do
+                "$qmlcg" -I "$qmlpath" -o "$qml"c "$qml"
+              done
+            '';
+
             postPatch = ''
               # Helper to update or append keys in theme.conf
               update_ini() {
