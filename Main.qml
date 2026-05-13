@@ -268,7 +268,7 @@ Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: 30
+            topMargin: 40
             rightMargin: 40
         }
         textColor: container.extractedAccent
@@ -303,8 +303,8 @@ Rectangle {
         anchors {
             top: parent.top
             left: parent.left
-            topMargin: 50
-            leftMargin: 60
+            topMargin: 40
+            leftMargin: 40
         }
         opacity: container.uiReady ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 300 } }
