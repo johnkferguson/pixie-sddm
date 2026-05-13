@@ -240,7 +240,6 @@ Rectangle {
     }
 
     FontLoader { id: fontRegular; source: "assets/fonts/FlexRounded-R.ttf" }
-    FontLoader { id: fontMedium; source: "assets/fonts/FlexRounded-M.ttf" }
     FontLoader { id: fontBold; source: "assets/fonts/FlexRounded-B.ttf" }
 
     property string activeFontRegular: (config.fontFamily && config.fontFamily.length > 0) ? config.fontFamily : fontRegular.name
