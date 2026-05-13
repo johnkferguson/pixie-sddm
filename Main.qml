@@ -243,17 +243,6 @@ Rectangle {
         fillMode: Image.PreserveAspectCrop
     }
 
-    // DEBUG: remove before merging upstream
-    Text {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.margins: 8
-        color: "#FF00FF"
-        font.pixelSize: 18
-        z: 9999
-        text: "DEBUG userLabelMode=[" + (config.userLabelMode === undefined ? "UNDEFINED" : config.userLabelMode) + "] strictEq=" + (config.userLabelMode === "username")
-    }
-
     // High-Quality Standalone Blur (Qt6 Native)
     MultiEffect {
         id: backgroundBlur
