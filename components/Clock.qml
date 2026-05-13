@@ -8,12 +8,10 @@ Item {
     id: clock
 
     property string backgroundSource: ""
-    property color defaultHoursColor: "#AED68A"
-    property color defaultMinutesColor: "#D4E4BC"
     property string fontFamily: "FlexRounded" // Overridden by Main.qml
     property color baseAccent: config.accentColor
-    property color smartHoursColor: defaultHoursColor
-    property color smartMinutesColor: defaultMinutesColor
+    property color smartHoursColor: baseAccent
+    property color smartMinutesColor: baseAccent
     property string timeStr: ""
 
     Behavior on smartHoursColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
