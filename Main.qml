@@ -296,7 +296,16 @@ Rectangle {
 
     Text {
         id: dateText
-        text: Qt.formatDateTime(new Date(), "dddd, MMMM d")
+        text: {
+            var d = new Date();
+            var day = d.getDate();
+            var suffix = (day >= 11 && day <= 13) ? "th"
+                : day % 10 === 1 ? "st"
+                : day % 10 === 2 ? "nd"
+                : day % 10 === 3 ? "rd"
+                : "th";
+            return Qt.formatDateTime(d, "dddd, MMMM") + " " + day + suffix;
+        }
         color: container.extractedAccent
         font.pixelSize: 22
         font.family: activeFontRegular
