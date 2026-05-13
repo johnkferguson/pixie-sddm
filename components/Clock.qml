@@ -16,6 +16,9 @@ Item {
     property color smartMinutesColor: defaultMinutesColor
     property string timeStr: ""
 
+    Behavior on smartHoursColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+    Behavior on smartMinutesColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+
     function updateTime() {
         var date = new Date();
         var hours = date.getHours();

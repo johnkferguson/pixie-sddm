@@ -25,6 +25,7 @@ Rectangle {
     Component.onCompleted: {
         if (typeof userModel !== "undefined" && userModel.lastIndex >= 0) userIndex = userModel.lastIndex;
         if (typeof sessionModel !== "undefined" && sessionModel.lastIndex >= 0) sessionIndex = sessionModel.lastIndex;
+        uiReady = true;
     }
 
     function cleanName(name) {
@@ -104,7 +105,9 @@ Rectangle {
     property color baseColor: config.backgroundColor
     property color surfaceColor: Qt.lighter(baseColor, 1.3)
     property color surfaceVariantColor: Qt.lighter(baseColor, 1.6)
-    property bool uiReady: config.autoColor !== "true" || colorExtractor.processed
+    property bool uiReady: false
+
+    Behavior on extractedAccent { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
 
     Timer {
         id: colorDelay
