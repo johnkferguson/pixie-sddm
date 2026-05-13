@@ -10,8 +10,8 @@ Item {
     property string backgroundSource: ""
     property string fontFamily: "FlexRounded" // Overridden by Main.qml
     property color baseAccent: config.accentColor
-    property color smartHoursColor: baseAccent
-    property color smartMinutesColor: baseAccent
+    property color smartHoursColor: hoursColorFor(baseAccent)
+    property color smartMinutesColor: minutesColorFor(baseAccent)
     property string timeStr: ""
 
     Behavior on smartHoursColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
@@ -34,32 +34,21 @@ Item {
         clock.timeStr = hStr + mStr;
     }
 
-    function updateColors() {
-        var base = clock.baseAccent;
-
-        if (base.hsvSaturation < 0.15) {
-            clock.smartHoursColor = Qt.lighter(base, 1.3);
-            clock.smartMinutesColor = Qt.darker(base, 1.4);
-            return;
-        }
-
-        if (base.hsvValue < 0.5) {
-            clock.smartHoursColor = Qt.hsva(base.hsvHue, 0.7, 0.9, 1.0);
-            clock.smartMinutesColor = Qt.hsva(base.hsvHue, 0.45, 0.85, 1.0);
-        } else if (base.hsvValue > 0.8 && base.hsvSaturation < 0.2) {
-            clock.smartHoursColor = Qt.hsva(base.hsvHue, 0.8, 0.7, 1.0);
-            clock.smartMinutesColor = Qt.hsva(base.hsvHue, 0.5, 0.75, 1.0);
-        } else {
-            clock.smartHoursColor = Qt.hsva(base.hsvHue, Math.min(1.0, base.hsvSaturation * 1.3), 0.95, 1.0);
-            clock.smartMinutesColor = Qt.hsva(base.hsvHue, Math.min(1.0, base.hsvSaturation * 0.75), 0.92, 1.0);
-        }
+    function hoursColorFor(base) {
+        if (base.hsvSaturation < 0.15) return Qt.lighter(base, 1.3);
+        if (base.hsvValue < 0.5) return Qt.hsva(base.hsvHue, 0.7, 0.9, 1.0);
+        if (base.hsvValue > 0.8 && base.hsvSaturation < 0.2) return Qt.hsva(base.hsvHue, 0.8, 0.7, 1.0);
+        return Qt.hsva(base.hsvHue, Math.min(1.0, base.hsvSaturation * 1.3), 0.95, 1.0);
     }
 
-    onBaseAccentChanged: updateColors()
-    Component.onCompleted: {
-        updateColors();
-        updateTime();
+    function minutesColorFor(base) {
+        if (base.hsvSaturation < 0.15) return Qt.darker(base, 1.4);
+        if (base.hsvValue < 0.5) return Qt.hsva(base.hsvHue, 0.45, 0.85, 1.0);
+        if (base.hsvValue > 0.8 && base.hsvSaturation < 0.2) return Qt.hsva(base.hsvHue, 0.5, 0.75, 1.0);
+        return Qt.hsva(base.hsvHue, Math.min(1.0, base.hsvSaturation * 0.75), 0.92, 1.0);
     }
+
+    Component.onCompleted: updateTime()
 
     Row {
         anchors.centerIn: parent
