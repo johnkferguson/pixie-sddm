@@ -272,6 +272,7 @@ Rectangle {
             rightMargin: 30
         }
         textColor: container.extractedAccent
+        fontFamily: container.activeFontRegular
         z: 100
         opacity: container.uiReady ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 300 } }

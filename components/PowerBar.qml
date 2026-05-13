@@ -11,6 +11,11 @@ Row {
     height: 30
 
     property color textColor: "white"
+    property string fontFamily: ""
+
+    property color baseColor: config.backgroundColor
+    property color surfaceColor: Qt.lighter(baseColor, 1.3)
+    property color surfaceVariantColor: Qt.lighter(baseColor, 1.6)
 
     FontLoader { id: iconFont; source: "../assets/fonts/MaterialDesignIcons.ttf" }
 
@@ -35,9 +40,25 @@ Row {
         }
 
         ToolTip {
+            id: tip
             visible: clickArea.containsMouse && btn.tooltip.length > 0
             text: btn.tooltip
             delay: 500
+            padding: 10
+
+            background: Rectangle {
+                color: powerBarRoot.surfaceColor
+                radius: 10
+                border.width: 1
+                border.color: powerBarRoot.surfaceVariantColor
+            }
+
+            contentItem: Text {
+                text: tip.text
+                color: config.textColor
+                font.family: powerBarRoot.fontFamily
+                font.pixelSize: 13
+            }
         }
     }
 
