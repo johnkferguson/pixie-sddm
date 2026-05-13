@@ -136,6 +136,9 @@ The most modern and flexible way to install.
       textColor = "#E2E2E6";            # Hex color code
       fontFamily = "JetBrains Mono";    # Font family name (must be installed system-wide)
       userLabelMode = "username";       # "displayName" (default) or "username"
+      showSuspend = false;              # Hide individual power buttons (defaults true)
+      showRestart = true;
+      showShutdown = true;
     })
   ];
 }

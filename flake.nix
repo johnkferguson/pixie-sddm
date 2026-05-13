@@ -28,6 +28,9 @@
             textColor ? null,
             fontFamily ? null,
             userLabelMode ? null,
+            showSuspend ? null,
+            showRestart ? null,
+            showShutdown ? null,
             ...
           }@args:
           let
@@ -44,6 +47,9 @@
                 textColor
                 fontFamily
                 userLabelMode
+                showSuspend
+                showRestart
+                showShutdown
                 ;
             };
 

@@ -3,6 +3,7 @@
  * Author: xCaptaiN09
  */
 import QtQuick
+import QtQuick.Controls
 
 Row {
     id: powerBarRoot
@@ -12,6 +13,33 @@ Row {
     property color textColor: "white"
 
     FontLoader { id: iconFont; source: "../assets/fonts/MaterialDesignIcons.ttf" }
+
+    component PowerButton: Text {
+        id: btn
+        property string tooltip: ""
+        signal clicked()
+
+        color: powerBarRoot.textColor
+        font.pixelSize: 20
+        font.family: iconFont.name
+        anchors.verticalCenter: parent.verticalCenter
+        scale: clickArea.containsMouse ? 1.15 : 1.0
+        Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutQuad } }
+
+        MouseArea {
+            id: clickArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: btn.clicked()
+        }
+
+        ToolTip {
+            visible: clickArea.containsMouse && btn.tooltip.length > 0
+            text: btn.tooltip
+            delay: 500
+        }
+    }
 
     // Battery (With forced live updates)
     Row {
@@ -67,42 +95,24 @@ Row {
         }
     }
 
-    // Suspend
-    Text {
+    PowerButton {
+        visible: config.showSuspend === "true"
         text: "󰤄"
-        color: textColor
-        font.pixelSize: 20
-        font.family: iconFont.name
-        anchors.verticalCenter: parent.verticalCenter
-        MouseArea {
-            anchors.fill: parent
-            onClicked: sddm.suspend()
-        }
+        tooltip: "Suspend"
+        onClicked: sddm.suspend()
     }
 
-    // Restart
-    Text {
+    PowerButton {
+        visible: config.showRestart === "true"
         text: "󰑐"
-        color: textColor
-        font.pixelSize: 20
-        font.family: iconFont.name
-        anchors.verticalCenter: parent.verticalCenter
-        MouseArea {
-            anchors.fill: parent
-            onClicked: sddm.reboot()
-        }
+        tooltip: "Restart"
+        onClicked: sddm.reboot()
     }
 
-    // Shutdown
-    Text {
+    PowerButton {
+        visible: config.showShutdown === "true"
         text: "󰐥"
-        color: textColor
-        font.pixelSize: 20
-        font.family: iconFont.name
-        anchors.verticalCenter: parent.verticalCenter
-        MouseArea {
-            anchors.fill: parent
-            onClicked: sddm.powerOff()
-        }
+        tooltip: "Shutdown"
+        onClicked: sddm.powerOff()
     }
 }
