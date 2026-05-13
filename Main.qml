@@ -25,7 +25,14 @@ Rectangle {
     Component.onCompleted: {
         if (typeof userModel !== "undefined" && userModel.lastIndex >= 0) userIndex = userModel.lastIndex;
         if (typeof sessionModel !== "undefined" && sessionModel.lastIndex >= 0) sessionIndex = sessionModel.lastIndex;
-        uiReady = true;
+        uiReadyTimer.start();
+    }
+
+    Timer {
+        id: uiReadyTimer
+        interval: 500
+        repeat: false
+        onTriggered: container.uiReady = true
     }
 
     function cleanName(name) {
