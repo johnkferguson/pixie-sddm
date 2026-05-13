@@ -23,7 +23,7 @@ Row {
         font.pixelSize: 20
         font.family: iconFont.name
         anchors.verticalCenter: parent.verticalCenter
-        scale: clickArea.containsMouse ? 1.15 : 1.0
+        scale: clickArea.containsMouse ? 1.5 : 1.0
         Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutQuad } }
 
         MouseArea {
