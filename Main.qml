@@ -392,10 +392,12 @@ Rectangle {
         Rectangle {
             id: loginCard
             width: 380
-            // Dynamic height: Expands smoothly when NumLock text appears
-            height: 480 + (numLockIndicator.visible ? 40 : 0)
+            // Base height drops by 51 (session pill 36 + column spacing 15) when
+            // the session pill is hidden. NumLock indicator adds another 40.
+            property int baseHeight: sessionPill.visible ? 480 : 429
+            height: baseHeight + (numLockIndicator.visible ? 40 : 0)
             x: (parent.width - width) / 2
-            y: (parent.height - 480) / 2
+            y: (parent.height - baseHeight) / 2
             color: loginState.isError ? "#442222" : baseColor
             opacity: 0.7
             radius: 32
