@@ -502,7 +502,7 @@ Rectangle {
                     }
 
                     // Animated avatar: AnimatedImage + MultiEffect mask. Pauses
-                    // after 10s to avoid burning power at an idle greeter.
+                    // after 10 minutes to avoid burning power at an idle greeter.
                     AnimatedImage {
                         id: animAvatar
                         anchors.fill: parent
@@ -536,7 +536,7 @@ Rectangle {
                     Timer {
                         id: animPauseTimer
                         property bool expired: false
-                        interval: 10000
+                        interval: 600000
                         running: avatarHolder.isAnimated
                         repeat: false
                         onTriggered: expired = true
