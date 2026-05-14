@@ -37,6 +37,11 @@
             # Helper to convert Nix types to SDDM-compatible strings
             toIniValue = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
 
+            # Avatar handling: a .gif source enables the animated render path
+            # (AnimatedImage + MultiEffect mask); anything else uses the static
+            # path (Image + Canvas clip).
+            isAnimatedAvatar = avatar != null && lib.hasSuffix ".gif" (toString avatar);
+
             # Explicitly capture known arguments to satisfy the linter.
             knownArgs = {
               inherit
@@ -120,6 +125,8 @@
                 update_ini "autoColor" "false"
               ''}
 
+              update_ini "avatarAnimated" "${if isAnimatedAvatar then "true" else "false"}"
+
               # Dynamically generate update_ini calls for all configuration arguments
               # (these run AFTER pre-compute, so user overrides win)
               ${lib.concatStringsSep "\n" (
@@ -131,10 +138,14 @@
               mkdir -p $out/share/sddm/themes/pixie
               cp -r * $out/share/sddm/themes/pixie/
 
-              # Replace avatar asset if a custom path is provided
-              ${lib.optionalString (avatar != null) ''
-                cp -f ${avatar} $out/share/sddm/themes/pixie/assets/avatar.jpg
-              ''}
+              # Replace avatar asset if a custom path is provided. A .gif source
+              # lands as avatar.gif and triggers the animated render path; anything
+              # else lands as avatar.jpg for the static path.
+              ${lib.optionalString (avatar != null) (
+                if isAnimatedAvatar
+                then ''cp -f ${avatar} $out/share/sddm/themes/pixie/assets/avatar.gif''
+                else ''cp -f ${avatar} $out/share/sddm/themes/pixie/assets/avatar.jpg''
+              )}
             '';
           };
       in

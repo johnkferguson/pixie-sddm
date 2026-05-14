@@ -415,16 +415,22 @@ Rectangle {
                 spacing: 15
 
                 Item {
+                    id: avatarHolder
                     Layout.preferredWidth: 120
                     Layout.preferredHeight: 120
                     Layout.alignment: Qt.AlignHCenter
+
+                    property bool isAnimated: config.avatarAnimated === "true"
+                    property bool avatarReady: isAnimated
+                        ? animAvatar.status === AnimatedImage.Ready
+                        : avatar.status === Image.Ready
 
                     Rectangle {
                         id: avatarFallback
                         anchors.fill: parent
                         color: surfaceColor
                         radius: width / 2
-                        visible: avatar.status !== Image.Ready
+                        visible: !avatarHolder.avatarReady
 
                         Text {
                             anchors.centerIn: parent
@@ -446,11 +452,11 @@ Rectangle {
                         }
                     }
 
-                    // Bulletproof Circular Avatar (Canvas method)
+                    // Static avatar: Canvas with circular clip (one-shot paint).
                     Canvas {
                         id: avatarCanvas
                         anchors.fill: parent
-                        visible: avatar.status === Image.Ready
+                        visible: !avatarHolder.isAnimated && avatar.status === Image.Ready
 
                         onPaint: {
                             var ctx = getContext("2d");
@@ -460,7 +466,6 @@ Rectangle {
                             ctx.closePath();
                             ctx.clip();
                             ctx.drawImage(avatar, 0, 0, width, height);
-                            console.log("Pixie SDDM: Canvas draw complete.");
                         }
 
                         Timer {
@@ -477,6 +482,7 @@ Rectangle {
                             visible: false
 
                             Component.onCompleted: {
+                                if (avatarHolder.isAnimated) return;
                                 var s = Qt.resolvedUrl("assets/avatar.jpg");
                                 if (typeof userModel !== "undefined" && userModel.count > 0) {
                                     var icon = userModel.data(userModel.index(container.userIndex, 0), Qt.UserRole + 3);
@@ -489,11 +495,51 @@ Rectangle {
 
                             onStatusChanged: {
                                 if (status === Image.Ready) {
-                                    console.log("Pixie SDDM: Image ready, repainting Canvas.");
                                     repaintTimer.start();
                                 }
                             }
                         }
+                    }
+
+                    // Animated avatar: AnimatedImage + MultiEffect mask. Pauses
+                    // after 10s to avoid burning power at an idle greeter.
+                    AnimatedImage {
+                        id: animAvatar
+                        anchors.fill: parent
+                        source: avatarHolder.isAnimated ? "assets/avatar.gif" : ""
+                        fillMode: Image.PreserveAspectCrop
+                        visible: false
+                        layer.enabled: avatarHolder.isAnimated
+                        paused: animPauseTimer.expired
+                    }
+
+                    Item {
+                        id: animMaskShape
+                        anchors.fill: parent
+                        visible: false
+                        layer.enabled: avatarHolder.isAnimated
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: width / 2
+                            color: "white"
+                        }
+                    }
+
+                    MultiEffect {
+                        anchors.fill: parent
+                        source: animAvatar
+                        maskEnabled: true
+                        maskSource: animMaskShape
+                        visible: avatarHolder.isAnimated && animAvatar.status === AnimatedImage.Ready
+                    }
+
+                    Timer {
+                        id: animPauseTimer
+                        property bool expired: false
+                        interval: 10000
+                        running: avatarHolder.isAnimated
+                        repeat: false
+                        onTriggered: expired = true
                     }
                 }
 
