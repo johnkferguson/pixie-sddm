@@ -647,6 +647,7 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: 64
                     Layout.preferredHeight: 64
+                    Layout.topMargin: 10
                     focusPolicy: Qt.NoFocus
                     enabled: !container.isLoggingIn
 
